@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Балаболка – Меню</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    padding: 1rem;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Псевдоелемент для фонового зображення */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('fon.png') no-repeat center center / cover;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    z-index: -1;
+  }
+
+  /* Фон на ПК */
+  @media (min-width: 768px) {
+      body::before {
+          opacity: 1;
+      }
+  }
+
+  .menu-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    animation: popIn 0.7s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    margin: 0 0 0.3rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  p.subtitle {
+    margin: 0 0 1.5rem 0;
+    opacity: 0.8;
+    font-size: 1rem;
+  }
+
+  .search-label {
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 600;
+    font-size: 1rem;
+    opacity: 0.85;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .input-group:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+  }
+  select {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+  }
+  select option {
+    background: #1c1c1c;
+    color: #fff;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    color: #fff;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  }
+  .btn-secondary {
+    background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
+  }
+
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Адаптивність */
+  @media (max-width: 500px) {
+    .menu-card {
+      padding: 1.5rem 1rem;
+    }
+    h1 { font-size: 1.8rem; }
+    p.subtitle, .search-label { font-size: 0.95rem; }
+    select { font-size: 0.95rem; }
+    .btn { font-size: 1rem; padding: 0.8rem; }
+  }
+
+  @media (max-width: 350px) {
+    h1 { font-size: 1.6rem; }
+    p.subtitle, .search-label { font-size: 0.85rem; }
+    select { font-size: 0.9rem; }
+    .btn { font-size: 0.95rem; padding: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="menu-card">
+  <h1>Балаболка</h1>
+  <p class="subtitle" id="userInfo">Користувач: —</p>
+
+  <p class="search-label">Параметри пошуку співрозмовника:</p>
+
+  <div class="input-group">
+    <select id="searchGender">
+      <option value="any">Стать: будь-яка</option>
+      <option value="female">Жінка</option>
+      <option value="male">Чоловік</option>
+    </select>
+  </div>
+
+  <div class="input-group">
+    <select id="searchAge">
+      <option value="any">Вік: будь-який</option>
+      <option value="<18">&lt;18</option>
+      <option value="18-23">18-23</option>
+      <option value="24-29">24-29</option>
+      <option value="30-40">30-40</option>
+      <option value="40+">40+</option>
+    </select>
+  </div>
+
+  <button class="btn" id="startText">Текстовий чат</button>
+  <button class="btn btn-secondary" id="startVoice">Голосовий чат</button>
+</div>
+
+<script>
+  const userInfo = document.getElementById('userInfo');
+  const gender = localStorage.getItem('gender') || '—';
+  const age = localStorage.getItem('age') || '—';
+  userInfo.textContent = `Користувач: ${gender==='male'?'Чоловік':gender==='female'?'Жінка':'Гість'} • ${age}`;
+
+  document.getElementById('startText').addEventListener('click', ()=>{
+    window.location.href = 'chat.html?mode=text';
+  });
+  document.getElementById('startVoice').addEventListener('click', ()=>{
+    window.location.href = 'voice.html';
+  });
+</script>
+
+</body>
+</html>
